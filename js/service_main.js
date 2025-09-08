@@ -44,6 +44,8 @@ document.addEventListener('DOMContentLoaded', function () {
     return total;
   }
 
+  
+
   // Плавное появление из точки
 function popIn(el) {
   if (!el) return;
@@ -155,21 +157,39 @@ renderInlineCats();
     showResultsContainer.classList.toggle('pointer-events-none', !hasSelection);
   }
 
-  function refreshVisibilityAndCards() {
-  const hasSubtypes = Object.keys(selectedServices).length > 0;
+function refreshVisibilityAndCards() {
+  const hasSelection = Object.keys(selectedServices).length > 0;
 
-  if (hasSubtypes) {
-    renderMatchingCards();
-    document.getElementById('bizResultsWrap')?.classList.remove('hidden');
-    document.querySelector('[data-results-title]')?.classList.remove('hidden');
-    document.getElementById('bizEmpty')?.classList.add('hidden');
+  const wrap  = document.getElementById('bizResultsWrap');
+  const title = document.querySelector('[data-results-title]');
+  const empty = document.getElementById('bizEmpty');
+  const grid  = document.getElementById('matchingCards');
+
+  if (!hasSelection) {
+    // пока не выбрали подтип — вообще ничего не показываем
+    empty?.classList.add('hidden');
+    wrap?.classList.add('hidden');
+    title?.classList.add('hidden');
+    grid?.replaceChildren();
+    return;
+  }
+
+  // есть выбор → рендерим карточки и решаем, что показывать
+  const count = renderMatchingCards(); // вернём количество найденных
+
+  if (count === 0) {
+    // выбрано, но результатов нет → показываем пустое состояние
+    empty?.classList.remove('hidden');
+    wrap?.classList.add('hidden');
+    title?.classList.remove('hidden');
   } else {
-    document.getElementById('matchingCards')?.replaceChildren();
-    document.getElementById('bizResultsWrap')?.classList.add('hidden');
-    document.querySelector('[data-results-title]')?.classList.add('hidden');
-    document.getElementById('bizEmpty')?.classList.remove('hidden');
+    // есть результаты
+    empty?.classList.add('hidden');
+    wrap?.classList.remove('hidden');
+    title?.classList.remove('hidden');
   }
 }
+
 
 function setPillActive(btn, active) {
   if (!btn) return;
@@ -236,11 +256,11 @@ function pruneSelections() {
 
   function renderMatchingCards() {
     const grid = document.getElementById('matchingCards');
-    if (!grid) return;
-    grid.innerHTML = '';
+    if (!grid) return 0;
+  grid.innerHTML = '';
 
     const matches = collectMatches();
-    if (!matches.length) return;
+  if (!matches.length) return 0;
 
     grid.innerHTML = matches.map(m => {
       const href  = `pages/detail.html?purpose=${encodeURIComponent(m._purpose || 'land')}&id=${encodeURIComponent(m.id)}`;
@@ -266,7 +286,7 @@ function pruneSelections() {
 
   function refreshAfterSelectionChange() {
     updateShowResultsButton();
-    renderMatchingCards();
+    refreshVisibilityAndCards();
     window.dispatchEvent(new CustomEvent('filters:changed', {
       detail: { selectedServices: Object.values(selectedServices) }
     }));
@@ -438,13 +458,14 @@ refreshVisibilityAndCards();
   });
 
   // Кнопка "Показать" (если используешь переход на list.html)
-  showResultsBtn?.addEventListener('click', () => {
-    const names = Object.values(selectedServices).map(s => s.service);
-    if (!names.length) return;
-    const params = new URLSearchParams();
-    names.forEach(n => params.append('suitableFor', encodeURIComponent(n)));
-    window.location.href = `./pages/list.html?${params.toString()}`;
-  });
+showResultsBtn?.addEventListener('click', () => {
+  const names = Object.values(selectedServices).map(s => s.service);
+  if (!names.length) return;
+
+  const params = new URLSearchParams();
+  names.forEach(n => params.append('suitableFor', n)); 
+  window.location.href = `./pages/list.html?${params.toString()}`;
+});
 
   // ================== init ==================
   renderTopCategories();
