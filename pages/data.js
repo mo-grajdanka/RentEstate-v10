@@ -13,6 +13,7 @@ var dataByPurpose = {
       place: "Кушелевская дорога",
 coordinates: [59.986111, 30.368838],
 address: "Санкт-Петербург, Кушелевская дорога, 1А", 
+suitableFor: ["Кафе", "Футбол", "Вет клиника"],
   transport: [                                              
     { line: "Лесная", icon: "🚇", time: "16–20 мин" },
     { line: "Площадь Мужества", icon: "🚊", time: "21–30 мин" },
@@ -297,6 +298,7 @@ coordinates: [59.990552, 30.383626],
     { line: "Политехническая", icon: "🚊", time: "от 31 мин" },
     { line: "Академическая", icon: "🚇", time: "от 31 мин" }
   ],
+  suitableFor: ["Кафе", "Футбол", "Вет клиника"],
     transportCharacteristics: [
     { label: "✔️", value: "5 минут до 2 остановок автобуса" },
     { label: "✔️", value: "10 минут от станции м. Лесная" },
@@ -413,6 +415,7 @@ coordinates: [60.092746, 29.958752],
       place: "Кушелевская дорога",
 coordinates: [59.986111, 30.368838],
       adSlider: true,
+      
       images: [
         "https://images.unsplash.com/photo-1526152505827-d2f3b5b4a52a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHJldGFpbHxlbnwwfHwwfHx8MA%3D%3D",
         "https://images.unsplash.com/photo-1511317559916-56d5ddb62563?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHJldGFpbHxlbnwwfHwwfHx8MA%3D%3D",
